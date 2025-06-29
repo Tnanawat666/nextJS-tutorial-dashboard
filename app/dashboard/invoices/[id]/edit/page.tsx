@@ -5,12 +5,18 @@ import { fetchInvoiceById } from '@/app/lib/data';
 import { Invoice } from '../../../../lib/definitions';
 import { notFound } from 'next/navigation';
 
-export default async function Page(props: { params: { id: string } }) {
-    const params = await props.params;
+// Fix props type error
+type PageProps = {
+    params: {
+        id: string;
+    };
+};
+
+export default async function Page({ params }: PageProps) {
     const id = params.id;
     const [invoice, customers] = await Promise.all([
         fetchInvoiceById(id),
-        fetchCustomers()
+        fetchCustomers(),
     ]);
     if (!invoice) {
         notFound();
@@ -25,5 +31,5 @@ export default async function Page(props: { params: { id: string } }) {
             />
             <Form invoice={invoice} customers={customers} />
         </main>
-    )
+    );
 }
